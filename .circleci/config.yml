@@ -19,6 +19,9 @@ jobs:
         steps:
             - checkout
             - run: mvn test -e
+            - store_artifacts:
+                path: reports
+                destination: reports
 
 workflows:
   version: 2
