@@ -3,7 +3,7 @@ version: 2.0
 jobs:
     build:
         docker:
-            - image: sugan1234/vaadin:v1
+            - image: sugan1234/vaadin_v2:latest
         environment:
           MAVEN_CLI_OPTS: "--batch-mode"
         steps:
@@ -15,14 +15,14 @@ jobs:
                 
     test:
         docker:
-            - image: sugan1234/vaadin:v1
+            - image: sugan1234/vaadin_v2:latest
         steps:
             - checkout
             - run: mvn test -e
             - store_artifacts:
                 path: reports
                 destination: reports
-
+n
 workflows:
   version: 2
   workflow:
