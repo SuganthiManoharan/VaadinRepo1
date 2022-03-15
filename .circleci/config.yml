@@ -22,7 +22,7 @@ jobs:
             - store_artifacts:
                 path: reports
                 destination: reports
-n
+
 workflows:
   version: 2
   workflow:
