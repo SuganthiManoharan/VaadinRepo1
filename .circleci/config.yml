@@ -15,7 +15,7 @@ jobs:
                 
     test:
         docker:
-            - image: sugan1234/vaadin_v2:latest
+            - image: sugan1234/vaadinrepo:latest
         steps:
             - checkout
             - run: mvn test -e
