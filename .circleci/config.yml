@@ -31,9 +31,9 @@ jobs:
        services:
             - docker:dind
        steps:
-             echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-            
-             gcloud --quiet config set project $GCP_PROJECT_ID             
-             gcloud --quiet builds submit . --config=cloudbuild.yaml                
+            -  echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-            
+            -  gcloud --quiet config set project $GCP_PROJECT_ID             
+            -  gcloud --quiet builds submit . --config=cloudbuild.yaml                
 
 workflows:
   version: 2
