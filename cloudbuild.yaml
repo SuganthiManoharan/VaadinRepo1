@@ -7,4 +7,4 @@ steps:
     args: [ 'push', 'gcr.io/$PROJECT_ID/vaadin-app']
     # deploy to Cloud Run
   - name: "gcr.io/cloud-builders/gcloud"
-    args: ['run', 'deploy', 'erp-ui', '--image', 'gcr.io/$PROJECT_ID/vaadin-app', '--region', 'europe-west4', '--platform', 'managed', '--allow-unauthenticated']
+    args: ['run', 'deploy', 'erp-ui', '--image', 'gcr.io/$PROJECT_ID/vaadin-app', '--region', 'europe-west1', '--platform', 'managed', '--allow-unauthenticated']
