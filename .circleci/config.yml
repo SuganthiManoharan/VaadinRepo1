@@ -32,15 +32,11 @@ jobs:
             - docker:dind
        steps:
            - run:
-                echo $GCLOUD_SERVICE_KEY > base64 --decode --ignore-garbage > ${HOME}/gcloud-service-key.json
-                echo $GCP_PROJECT_KEY > ./gcloud-service-key.json
-                cat ./gcloud-service-key.json
-                cat ${HOME}/gcloud-service-key.json
-                export $GCP_SERVICE_KEY=cat(${HOME}/gcloud-service-key.json)
-                pwd
-                gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json    
+                apt-get install -qq -y gettext
+                echo $GCLOUD_KEY_JSON > ${HOME}/gcloud-service-key.json
+                gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json                
                 gcloud --quiet config set project $GCP_PROJECT_ID             
-                gcloud --quiet builds submit . --config=cloudbuild.yaml                
+                gcloud --quiet builds submit . --config=cloudbuild.yaml              
 
 workflows:
   version: 2
