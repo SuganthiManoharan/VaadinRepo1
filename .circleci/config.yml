@@ -31,8 +31,7 @@ jobs:
        services:
             - docker:dind
        steps:
-            -  apt-get install -qq -y gettext
-            -  echo $GCLOUD_KEY_JSON > ${HOME}/gcloud-service-key.json
+            -  echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
             -  gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json    
             -  gcloud --quiet config set project $GCP_PROJECT_ID             
             -  gcloud --quiet builds submit . --config=cloudbuild.yaml                
