@@ -32,7 +32,6 @@ jobs:
             - docker:dind
        steps:
            - run:
-                apt-get install -qq -y gettext
                 echo $GCLOUD_KEY_JSON > ${HOME}/gcloud-service-key.json
                 gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json                
                 gcloud --quiet config set project $GCP_PROJECT_ID             
