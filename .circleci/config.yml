@@ -34,8 +34,9 @@ jobs:
            - run:
                 echo $GCLOUD_KEY_JSON > ${HOME}/gcloud-service-key.json
                 gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json                
-                gcloud --quiet config set project $GCP_PROJECT_ID             
-                gcloud --quiet builds submit . --config=cloudbuild.yaml              
+                gcloud --quiet config set project $GCP_PROJECT_ID
+                gcloud builds submit --tag gcr.io/project/VaadinRepo1
+                gcloud run deploy VaadinRepo1 --image gcr.io/project/VaadinRepo1 --platform managed --region europe-west1 --allow-unauthenticated             
 
 workflows:
   version: 2
