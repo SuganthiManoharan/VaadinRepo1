@@ -54,7 +54,7 @@ jobs:
               google-project-id: GOOGLE_PROJECT_ID
               image: $IMAGE_NAME
               registry-url: "gcr.io"
-              tag: §TAG
+              tag: "latest"
  
           - gcp-gcr/gcr-auth:
               gcloud-service-key: GOOGLE_CLOUD_KEYS
