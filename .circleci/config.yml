@@ -60,7 +60,7 @@ jobs:
               registry-url: "gcr.io"
               tag: $CIRCLE_SHA1
 
-      gcp_cloudrun_deploy:
+    gcp_cloudrun_deploy:
         description: Deploy using cloud run
         executor: machine-executor
         steps:
