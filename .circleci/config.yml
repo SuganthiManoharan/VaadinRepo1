@@ -42,9 +42,8 @@ jobs:
           - checkout
           - run:
               echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
-              sudo add-apt-repository ppa:webupd8team/y-ppa-manager
-              sudo apt-get update
-              sudo apt-get install y-ppa-manager
+              curl https://cli-assets.heroku.com/apt/release.key | sudo apt-key add -
+
               
           - gcp-gcr/gcr-auth:
               gcloud-service-key: GCP_SERVICE_KEY
