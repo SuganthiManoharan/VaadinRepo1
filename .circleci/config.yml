@@ -49,7 +49,7 @@ jobs:
           - gcp-gcr/build-image:
               dockerfile: Dockerfile
               google-project-id: GCP_PROJECT_ID
-              image:"image"
+              image: "image"
               registry-url: "gcr.io"
               tag: "latest"
           - gcp-gcr/push-image:
