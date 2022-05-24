@@ -40,23 +40,26 @@ jobs:
         executor: machine-executor
         steps:
           - checkout
-          - run:
-              echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
-              echo $GCLOUD_KEY_JSON > ${HOME}/gcloud-service-key.json
-              gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json                
-              gcloud --quiet config set project $GCP_PROJECT_ID
+          - setup_remote_docker:
+              docker_layer_caching: false
+          name: Build app binary and Docker image
+          command: |
+            echo 'export PATH=~$PATH:~/.local/bin' >> $BASH_ENV
+            echo ${GCP_PROJECT_KEY} | base64 --decode --ignore-garbage > $HOME/gcloud-service-key.json
+            echo 'export GOOGLE_CLOUD_KEYS=$(cat $HOME/gcloud-service-key.json)' >> $BASH_ENV
+            echo 'export TAG=${CIRCLE_SHA1}' >> $BASH_ENV
+            echo 'export IMAGE_NAME=$CIRCLE_PROJECT_REPONAME' >> $BASH_ENV && source $BASH_ENV
+            docker build -t gcr.io/$GOOGLE_PROJECT_ID/$IMAGE_NAME -t gcr.io/$GOOGLE_PROJECT_ID/$IMAGE_NAME:$TAG .
+            
+          - gcp-gcr/gcr-auth:
+              gcloud-service-key: GOOGLE_CLOUD_KEYS
+              google-project-id: GOOGLE_PROJECT_ID
+              google-compute-zone: GOOGLE_COMPUTE_ZONE
 
-          - gcp-gcr/build-image:
-              dockerfile: Dockerfile
-              google-project-id: GCP_PROJECT_ID
-              image: "image"
-              registry-url: "gcr.io"
-              tag: "latest"
           - gcp-gcr/push-image:
               google-project-id: GCP_PROJECT_ID
-              image: "image"
+              image: $IMAGE_NAME
               registry-url: "gcr.io"
-              tag: "latest"
 
     gcp_cloudrun_deploy:
         description: Deploy using cloud run
@@ -67,8 +70,9 @@ jobs:
               cluster: 'new-cluster'
               cluster-location: europe-west1-b
               platform: 'gke'
-              image: 'gcr.io/vaadincloud/image:latest'
+              image: 'gcr.io/$GOOGLE_PROJECT_ID/$IMAGE_NAME'
               service-name: 'vaadin-ui-service'
+              unauthenticated: true
 
 workflows:
   version: 2
