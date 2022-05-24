@@ -34,7 +34,6 @@ jobs:
                 path: reports
                 destination: reports
                 
-
     build_push_image_gcr:
             
         description: Build docker image and push to gcr registry
@@ -42,11 +41,15 @@ jobs:
         steps:
           - checkout
           - run:
-              name: Prepare env vars
-              command: |
-                echo $GCLOUD_KEY_JSON > ${HOME}/gcloud-service-key.json
-                gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json                
-                gcloud --quiet config set project $GCP_PROJECT_ID
+            echo $GCLOUD_KEY_JSON > ${HOME}/gcloud-service-key.json
+            gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json                
+            gcloud --quiet config set project $GCP_PROJECT_ID
+
+          - gcp-gcr/gcr-auth:
+              gcloud-service-key: GCLOUD_KEY_JSON
+              google-project-id: GCP_PROJECT_ID
+              google-compute-zone: GOOGLE_COMPUTE_ZONE
+
 
           - gcp-gcr/build-image:
               dockerfile: Dockerfile
@@ -86,4 +89,3 @@ workflows:
     - test:
         requires:
           - build
-          
