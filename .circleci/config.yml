@@ -42,8 +42,6 @@ jobs:
           - checkout
           - run:
               echo $GCP_SERVICE_KEY > ${HOME}/gcloud-service-key.json
-              gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json                
-              gcloud --quiet config set project $GCP_PROJECT_ID
 
           - gcp-gcr/gcr-auth:
               gcloud-service-key: GCP_SERVICE_KEY
