@@ -1,8 +1,8 @@
 version: 2.1
 orbs:
-  gcp-gcr: circleci/gcp-gcr@0.6.1
+  gcp-gcr: circleci/gcp-gcr@0.15.0
   cloudrun: circleci/gcp-cloud-run@1.0.1
-  gcp-gke: circleci/gcp-gke@0.2.0
+  gcp-cli: circleci/gcp-cli@2.4.1
 executors:
 
   gcloud-executor:
@@ -55,6 +55,10 @@ jobs:
               image: $IMAGE_NAME
               registry-url: "gcr.io"
               tag: "latest"
+              
+          - gcp-cli/install_and_initialize_cli:
+              context: myContext
+              executor: gcp-cli/default
  
           - gcp-gcr/gcr-auth:
               gcloud-service-key: GOOGLE_CLOUD_KEYS
