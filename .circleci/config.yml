@@ -1,4 +1,15 @@
-version: 2.0
+version: 2.1
+orbs:
+  gcp-gcr: circleci/gcp-gcr@0.6.1
+  cloudrun: circleci/gcp-cloud-run@1.0.1
+  gcp-gke: circleci/gcp-gke@0.2.0
+executors:
+
+  gcloud-executor:
+    docker:
+      - image: google/cloud-sdk
+  machine-executor:
+    machine: true
 
 jobs:
     build:
@@ -24,26 +35,54 @@ jobs:
                 destination: reports
                 
 
-
-    deploy:
-       docker:
-            - image: google/cloud-sdk
-       services:
-            - docker:dind
-       steps:
-           - run:
+    build_push_image_gcr:
+            
+        description: Build docker image and push to gcr registry
+        executor: machine-executor
+        steps:
+          - checkout
+          - run:
+              name: Prepare env vars
+              command: |
                 echo $GCLOUD_KEY_JSON > ${HOME}/gcloud-service-key.json
                 gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json                
                 gcloud --quiet config set project $GCP_PROJECT_ID
-                gcloud builds submit --tag gcr.io/project/VaadinRepo1
-                gcloud run deploy VaadinRepo1 --image gcr.io/project/VaadinRepo1 --platform managed --region europe-west1 --allow-unauthenticated             
+
+          - gcp-gcr/build-image:
+              dockerfile: Dockerfile
+              google-project-id: GCP_PROJECT_ID
+              image: $IMAGE_NAME
+              registry-url: "gcr.io"
+              tag: $CIRCLE_SHA1
+          - gcp-gcr/push-image:
+              google-project-id: GCP_PROJECT_ID
+              image: $IMAGE_NAME
+              registry-url: "gcr.io"
+              tag: $CIRCLE_SHA1
+
+      gcp_cloudrun_deploy:
+        description: Deploy using cloud run
+        executor: machine-executor
+        steps:
+          - cloudrun/init
+          - cloudrun/deploy:
+              cluster: 'new-cluster'
+              cluster-location: europe-west1-b
+              platform: 'gke'
+              image: 'gcr.io/$GOOGLE_PROJECT_ID/$IMAGE_NAME:$CIRCLE_SHA1'
+              service-name: 'vaadin-ui-service'
 
 workflows:
   version: 2
   workflow:
     jobs:
     - build
-    - deploy
+    - build_push_image_gcr:
+          requires:
+            - build
+    - gcp_cloudrun_deploy:
+          requires:
+            - build_push_image_gcr
     - test:
         requires:
           - build
