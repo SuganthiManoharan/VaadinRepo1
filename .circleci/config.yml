@@ -48,7 +48,7 @@ jobs:
 
           - gcp-gcr/build-image:
               dockerfile: Dockerfile
-              google-project-id: "vaadincloud"
+              google-project-id: GCP_PROJECT_ID
               image: $IMAGE_NAME
               registry-url: "gcr.io"
               tag: $CIRCLE_SHA1
