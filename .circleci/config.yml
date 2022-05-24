@@ -40,8 +40,6 @@ jobs:
         executor: machine-executor
         steps:
           - checkout
-          - setup_remote_docker:
-              docker_layer_caching: false
           - run:
               name: Build app binary and Docker image
               command: |
