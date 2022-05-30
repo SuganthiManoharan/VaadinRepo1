@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   gcp-gcr: circleci/gcp-gcr@0.15.0
   cloudrun: circleci/gcp-cloud-run@1.0.1
-  gcp-cli: circleci/gcp-cli@2.4.1
+  gcp-cli: circleci/gcp-cli@1.0.0
 executors:
 
   gcloud-executor:
@@ -32,10 +32,7 @@ jobs:
             - run: mvn test -e
             - store_artifacts:
                 path: reports
-                destination: reports
-    
-    install_and_configure_cli:
-
+                destination: reports   
          
     build_push_image_gcr:
             
@@ -44,10 +41,6 @@ jobs:
         steps:
           - checkout
           
-          - gcp-cli/install_and_initialize_cli:
-             context: myContext
-             executor: gcp-cli/default   
-
           - run:
               name: Build app binary and Docker image
               command: |
@@ -55,23 +48,18 @@ jobs:
                 echo ${GCP_PROJECT_KEY} | base64 --decode --ignore-garbage > $HOME/gcloud-service-key.json
                 echo 'export GOOGLE_CLOUD_KEYS=$(cat $HOME/gcloud-service-key.json)' >> $BASH_ENV
                 echo 'export TAG=$CIRCLE_SHA1' >> $BASH_ENV
-                echo 'export IMAGE_NAME=$CIRCLE_WORKFLOW_ID' >> $BASH_ENV && source $BASH_ENV             
-
-                # Initialize gcloud CLI
-                gcloud --quiet config set core/disable_usage_reporting true
-                gcloud --quiet config set component_manager/disable_update_check true
-                gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json               
-                gcloud --quiet config set project $GCP_PROJECT_ID
-                gcloud --quiet config set compute/zone $GOOGLE_COMPUTE_ZONE
+                echo 'export IMAGE_NAME=$CIRCLE_WORKFLOW_ID' >> $BASH_ENV && source $BASH_ENV    
+          
+          - gcp-cli/install_and_initialize_cli:
+              context: myContext
+              executor: gcp-cli/default          
                 
-
           - gcp-gcr/build-image:
               dockerfile: Dockerfile
               google-project-id: GOOGLE_PROJECT_ID
               image: $IMAGE_NAME
               registry-url: "gcr.io"
-              tag: "latest"
-              
+              tag: "latest"              
 
           - gcp-gcr/push-image:
               google-project-id: GCP_PROJECT_ID
