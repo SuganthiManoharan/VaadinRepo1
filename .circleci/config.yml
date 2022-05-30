@@ -51,7 +51,7 @@ jobs:
                 echo 'export IMAGE_NAME=$CIRCLE_WORKFLOW_ID' >> $BASH_ENV && source $BASH_ENV    
                 
           
-          - gcp-gcr/gcr-auth:
+          - gcp-gcr/gcr-auth
           
           - gcp-gcr/build-image:
               dockerfile: Dockerfile
