@@ -38,6 +38,8 @@ jobs:
             
         description: Build docker image and push to gcr registry
         executor: gcp-gcr/default
+        machine:
+          image: ubuntu-2004:202010-01
         steps:
           - checkout
           
