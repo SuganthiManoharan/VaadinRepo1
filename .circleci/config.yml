@@ -2,6 +2,7 @@ version: 2.1
 orbs:
   gcp-gcr: circleci/gcp-gcr@0.15.0
   cloudrun: circleci/gcp-cloud-run@1.0.1
+  gcp-cli: circleci/gcp-cli@2.4.1
 executors:
 
   gcloud-executor:
@@ -32,13 +33,21 @@ jobs:
             - store_artifacts:
                 path: reports
                 destination: reports
-                
+    
+    install_and_configure_cli:
+
+         
     build_push_image_gcr:
             
         description: Build docker image and push to gcr registry
         executor: machine-executor
         steps:
           - checkout
+          
+          - gcp-cli/install_and_initialize_cli:
+             context: myContext
+             executor: gcp-cli/default   
+
           - run:
               name: Build app binary and Docker image
               command: |
@@ -54,6 +63,7 @@ jobs:
                 gcloud auth activate-service-account --key-file=${HOME}/gcloud-service-key.json               
                 gcloud --quiet config set project $GCP_PROJECT_ID
                 gcloud --quiet config set compute/zone $GOOGLE_COMPUTE_ZONE
+                
 
           - gcp-gcr/build-image:
               dockerfile: Dockerfile
