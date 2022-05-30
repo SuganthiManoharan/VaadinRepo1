@@ -58,14 +58,15 @@ jobs:
           - gcp-gcr/build-image:
               dockerfile: Dockerfile
               google-project-id: GOOGLE_PROJECT_ID
-              image: $IMAGE_NAME
+              image: $CIRCLE_WORKFLOW_ID
               registry-url: "gcr.io"
               tag: "latest"              
 
           - gcp-gcr/push-image:
-              google-project-id: GCP_PROJECT_ID
-              image: $IMAGE_NAME
+              google-project-id: GOOGLE_PROJECT_ID
+              image: $CIRCLE_WORKFLOW_ID
               registry-url: "gcr.io"
+              tag: "latest"
 
     gcp_cloudrun_deploy:
         description: Deploy using cloud run
@@ -76,7 +77,7 @@ jobs:
               cluster: 'new-cluster'
               cluster-location: europe-west1-b
               platform: 'gke'
-              image: 'gcr.io/$GOOGLE_PROJECT_ID/$IMAGE_NAME'
+              image: 'gcr.io/$GOOGLE_PROJECT_ID/$CIRCLE_WORKFLOW_ID'
               service-name: 'vaadin-ui-service'
               unauthenticated: true
 
