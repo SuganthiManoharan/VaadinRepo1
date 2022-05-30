@@ -2,7 +2,7 @@ version: 2.1
 orbs:
   gcp-gcr: circleci/gcp-gcr@0.15.0
   cloudrun: circleci/gcp-cloud-run@1.0.1
-  gcp-cli: circleci/gcp-cli@1.0.0
+  gcp-cli: circleci/gcp-cli@2.1
 executors:
 
   gcloud-executor:
@@ -37,7 +37,7 @@ jobs:
     build_push_image_gcr:
             
         description: Build docker image and push to gcr registry
-        executor: machine-executor
+        executor: gcp-gcr/default
         steps:
           - checkout
           
@@ -49,11 +49,10 @@ jobs:
                 echo 'export GOOGLE_CLOUD_KEYS=$(cat $HOME/gcloud-service-key.json)' >> $BASH_ENV
                 echo 'export TAG=$CIRCLE_SHA1' >> $BASH_ENV
                 echo 'export IMAGE_NAME=$CIRCLE_WORKFLOW_ID' >> $BASH_ENV && source $BASH_ENV    
-          
-          - gcp-cli/install_and_initialize_cli:
-              context: myContext
-              executor: gcp-cli/default          
                 
+          
+          - gcp-gcr/gcr-auth:
+          
           - gcp-gcr/build-image:
               dockerfile: Dockerfile
               google-project-id: GOOGLE_PROJECT_ID
