@@ -71,10 +71,8 @@ jobs:
         executor: machine-executor
         steps:
           - cloudrun/init
-          - cloudrun/deploy:
-              cluster: 'new-cluster'
-              cluster-location: europe-west1-b
-              platform: 'gke'
+          - cloudrun/deploy:                            
+              platform: 'managed'
               image: 'gcr.io/$GOOGLE_PROJECT_ID/$CIRCLE_WORKFLOW_ID'
               service-name: 'vaadin-ui-service'
               unauthenticated: true
