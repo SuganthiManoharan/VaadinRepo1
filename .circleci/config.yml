@@ -10,7 +10,6 @@ executors:
       - image: google/cloud-sdk
   machine-executor:
     machine: true
-
 jobs:
     build:
         docker:
