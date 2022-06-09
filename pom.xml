@@ -11,6 +11,7 @@
     <properties>
         <java.version>11</java.version>
         <vaadin.version>23.0.0</vaadin.version>
+        <selenium.version>4.1.2</selenium.version>
     </properties>
 
     <parent>
@@ -168,7 +169,6 @@
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
         </dependency>
-
         <dependency>
             <groupId>com.vaadin</groupId>
             <artifactId>vaadin-testbench</artifactId>
@@ -205,6 +205,19 @@
                 <configuration>
                     <wait>500</wait>
                     <maxAttempts>240</maxAttempts>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>fully.qualified.MainClass</mainClass>
+                        </manifest>
+                    </archive>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
                 </configuration>
             </plugin>
 
@@ -262,6 +275,7 @@
                     <plugin>
                         <groupId>org.springframework.boot</groupId>
                         <artifactId>spring-boot-maven-plugin</artifactId>
+                        <version>2.4.5</version>
                         <executions>
                             <execution>
                                 <id>start-spring-boot</id>

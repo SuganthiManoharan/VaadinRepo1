@@ -24,13 +24,16 @@ public class ContactForm extends FormLayout {
   private Contact contact;
 
   TextField firstName = new TextField("First name");
+
   TextField lastName = new TextField("Last name");
+
   EmailField email = new EmailField("Email");
   ComboBox<Status> status = new ComboBox<>("Status");
   ComboBox<Company> company = new ComboBox<>("Company");
   Binder<Contact> binder = new BeanValidationBinder<>(Contact.class);
 
   Button save = new Button("Save");
+
   Button delete = new Button("Delete");
   Button close = new Button("Cancel");
 
@@ -47,7 +50,7 @@ public class ContactForm extends FormLayout {
         email,
         company,
         status,
-        createButtonsLayout()); 
+        createButtonsLayout());
   }
 
   private HorizontalLayout createButtonsLayout() {

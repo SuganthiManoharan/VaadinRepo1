@@ -1,3 +1,8 @@
+#YAML file for setting up CI/CD pipeline for Vaadin application in circleci
+#The file contains scripts to setup Build and test jobs. Build and test jobs uses the docker image sugan1234/vaadinrepo from dockerhub https://hub.docker.com/repository/docker/sugan1234/vaadinrepo
+#Scripts to setup deploy to GCP cloud should be written by build enineers. Kindly use the image ubuntu-2004:202010-01 for setting up deploy to cloud
+#ubuntu-2004:202010-01 - recommended linux image - includes Ubuntu 20.04, docker 19.03.13, docker-compose 1.27.4
+#build_push_image_gcr job can be extended further for build,push and deploy to cloud
 version: 2.1
 orbs:
   gcp-gcr: circleci/gcp-gcr@0.15.0
@@ -29,10 +34,7 @@ jobs:
         steps:
             - checkout
             - run: mvn test -e
-            - store_artifacts:
-                path: reports
-                destination: reports   
-         
+          
     build_push_image_gcr:
             
         description: Build docker image and push to gcr registry
